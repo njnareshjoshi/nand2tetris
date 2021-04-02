@@ -1,0 +1,33 @@
+
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/02/ALU.hdl
+
+/**
+ * The ALU (Arithmetic Logic Unit).
+ * Computes one of the following functions:
+ * if the ALU output == 0, zr is set to 1; otherwise zr is set to 0;
+ * if the ALU output < 0, ng is set to 1; otherwise ng is set to 0.
+ */
+
+// if (out == 0) set zr = 1
+// if (out < 0) set ng = 1
+
+CHIP FlagState {
+    IN  
+        tmpOut[16];  // 16-bit output of ALU program       
+
+    OUT 
+        zr, // 1 if (out == 0), 0 otherwise
+        ng; // 1 if (out < 0),  0 otherwise
+
+    PARTS:
+    Not(in=tmpOut[15],out=tmp1);
+    Not(in=tmp1,out=ng);
+
+    Or8Way(in=tmpOut[0..7],out=tmp2);
+    Or8Way(in=tmpOut[8..15],out=tmp3);
+    Or(a=tmp2,b=tmp3,out=tmp4);
+    Not(in=tmp4,out=zr);
+}
